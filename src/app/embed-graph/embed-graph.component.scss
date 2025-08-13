@@ -1,0 +1,69 @@
+.resizable-draggable {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  width: 200px;
+  height: 200px;
+  background-color: transparent;
+  cursor: move;
+  box-shadow: 0 0 5px 2px rgba(189, 189, 189, 0.5);
+  background-color: white;
+  margin: 20px;
+}
+
+.resizable-handle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 4px;
+  cursor: se-resize;
+}
+
+.resizable-draggable>dashboard-chart {
+  width: 95%;
+  height: 95%;
+  cursor: move;
+}
+
+.inner-canvas-white.ps-2 {
+  padding-right: 8px;
+}
+
+.canvas-grid {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background-image: linear-gradient(to right, #eeeeee 1px, transparent 1px),
+    linear-gradient(to bottom, #eeeeee 1px, transparent 1px);
+  background-size: 60px 40px;
+  overflow: hidden;
+}
+
+.canvas-grid::before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  height: 100%;
+  width: 100%;
+  background-image: linear-gradient(to right, #eeeeee 1px, transparent 1px),
+    linear-gradient(to bottom, #eeeeee 1px, transparent 1px);
+  background-size: 60px 40px;
+  pointer-events: none;
+}
+
+.dashboard-canvas {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  overflow-y: scroll;
+}
+
+.delete-cross {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
+}

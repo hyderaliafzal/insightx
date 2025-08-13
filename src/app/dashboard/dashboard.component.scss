@@ -1,0 +1,131 @@
+.resizable-draggable {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  width: 200px;
+  height: 200px;
+  background-color: transparent;
+  cursor: move;
+  box-shadow: 0 0 5px 2px rgba(189, 189, 189, 0.5);
+  background-color: white;
+  margin: 20px;
+}
+
+.resizable-handle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 4px;
+  cursor: se-resize;
+}
+
+.resizable-draggable>dashboard-chart {
+  width: 95%;
+  height: 95%;
+  cursor: move;
+}
+
+.dashboard-canvas {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  overflow-y: scroll;
+}
+
+.canvas-grid {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background-image: linear-gradient(to right, #eeeeee 1px, transparent 1px),
+    linear-gradient(to bottom, #eeeeee 1px, transparent 1px);
+  background-size: 60px 40px;
+  overflow: hidden;
+}
+
+.canvas-grid::before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  height: 100%;
+  width: 100%;
+  background-image: linear-gradient(to right, #eeeeee 1px, transparent 1px),
+    linear-gradient(to bottom, #eeeeee 1px, transparent 1px);
+  background-size: 60px 40px;
+  pointer-events: none;
+}
+
+.list-group-item {
+  padding: 10px;
+  height: auto;
+  border: 0px white solid;
+}
+
+.list-group-item:hover {
+  border-radius: 5px;
+  border: 1px solid #8255A1;
+  cursor: pointer;
+}
+
+.btn-group .btn.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.tab-content {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.saveRow {
+  position: fixed;
+  bottom: 3vh;
+  right: 4vh;
+}
+
+.nz-form-item {
+  display: block;
+}
+
+.nz-form-label {
+  margin-bottom: 8px;
+}
+
+.nz-form-control {
+  display: block;
+}
+
+.delete-cross {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
+}
+
+.list-group-item {
+  background-color: #ffffff !important;
+}
+
+.save-button {
+  background-color: #8255a1;
+  width: 80px;
+}
+
+.delete-button {
+  margin-right: 5px;
+  background-color: #ff0000;
+  color: white;
+  width: 80px;
+  border: none;
+}
+
+.inner-canvas-white.ps-2 {
+  padding-right: 8px;
+}
+
+.label-text {
+  color: #67757c;
+}

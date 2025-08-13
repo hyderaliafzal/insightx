@@ -1,0 +1,111 @@
+// Responsive
+/*
+Template Name: Admin Template
+Author: Wrappixel
+
+File: scss
+*/
+
+/*============================================================== 
+ For Desktop & above all (1650px) 
+ ============================================================== */
+
+/*============================================================== 
+ For Laptop & above all (1370px) 
+ ============================================================== */
+
+/*-- ============================================================== 
+ Small Desktop & above all (1024px) 
+ ============================================================== */
+@media (min-width: 1024px) {
+  .page-wrapper {
+    margin-left: $sidebar-width-full;
+  }
+}
+
+/*-- ============================================================== 
+ Ipad & above all(768px) 
+ ============================================================== */
+
+@include media-breakpoint-up(md) {
+  
+}
+
+/*-- ============================================================== 
+ Phone and below ipad(767px) 
+ ============================================================== */
+@include media-breakpoint-down(md) {
+}
+
+/* For tablets (max-width: 768px) */
+@media (max-width: 768px) {
+  .sidebar-submenu-nav {
+    max-height: 300px;  /* Adjust for tablet */
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+}
+
+/* For small desktops (768px to 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .sidebar-submenu-nav {
+    max-height: 350px;  /* Adjust for small desktops */
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  .chart-list-bg {
+    height: 200px;               
+    overflow-x: hidden;           
+    overflow-y: auto;   
+    padding: 3px;
+    box-sizing: content-box;
+  }
+}
+
+/* For medium desktops (1025px to 1366px) */
+@media (min-width: 1025px) and (max-width: 1366px) {
+  .sidebar-submenu-nav {
+    max-height: 375px;  /* Adjust for medium desktops */
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  .chart-list-bg {
+    height: 300px;               
+    overflow-x: hidden;           
+    overflow-y: auto;   
+    padding: 3px;
+    box-sizing: content-box;
+  }
+}
+
+/* For large desktops (1367px to 1536px) */
+@media (min-width: 1367px) and (max-width: 1536px) {
+  .sidebar-submenu-nav {
+    max-height: 400px;  /* Adjust for large desktops */
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  .chart-list-bg {
+    height: 500px;               
+    overflow-x: hidden;           
+    overflow-y: auto;   
+    padding: 3px;
+    box-sizing: content-box;
+  }
+}
+
+/* For extra large screens (1537px and above) */
+@media (min-width: 1537px) {
+  .sidebar-submenu-nav {
+    max-height: 450px;  /* Adjust for extra large screens */
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  .chart-list-bg {
+    height: 850px;               
+    overflow-x: hidden;           
+    overflow-y: auto;   
+    padding: 3px;
+    box-sizing: content-box;
+  }
+}

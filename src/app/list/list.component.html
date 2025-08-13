@@ -1,0 +1,75 @@
+<div class="row h-100 w-100">
+  <div class="col-12 p-0">
+    <div class="inner-canvas-white">
+      <div class="page-wrapper pt-4" style="padding-left: 20px;">
+        <div class="row">
+          <div class="col-12 mb-5">
+            <nz-input-group [nzSuffix]="suffixIconSearch">
+              <input type="text" nz-input placeholder="Search" (input)="onSearch($event)" />
+            </nz-input-group>
+            <ng-template #suffixIconSearch>
+              <span nz-icon nzType="search" class="editButton"></span>
+            </ng-template>
+          </div>
+          <div class="col-12">
+            <nz-table #listTable [nzData]="dataList" class="p-b-5" [nzBordered]="true" [nzFrontPagination]="false"
+              [nzLoading]="loading" [nzScroll]="{ y: '400px' }">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th style="width: 10rem;" class="text-end"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of listTable.data">
+                  <td>{{ data?.id }}</td>
+                  <td>{{ data?.name }}</td>
+                  <td style="width: 10rem;" class="text-end">
+                    <span nz-icon nzType="edit" nzTheme="outline" (click)="editList(data)" class="editButton"></span>
+                    <span nz-icon nzType="delete" nzTheme="outline" (click)="openDeleteConfirmationModal(data)"
+                      class="deleteButton" style="margin-left: 2rem;"></span>
+                  </td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<nz-modal [(nzVisible)]="isVisibleDeleteConfirmation" (nzOnCancel)="closeDeleteConfirmationModal()" [nzFooter]="null"
+  nzTitle="Confirmation" nzCentered nzWidth="45%">
+  <ng-container *nzModalContent>
+    <div class="row">
+      <div class="col-12">
+        <nz-form-label [nzLabelAlign]="'left'">Permanently delete data merge?</nz-form-label>
+        <br>
+        <nz-form-label class="lbl-confirmation" [nzLabelAlign]="'left'">Deleting this table may impact graphs and
+          dashboards where it is used - Proceed with Caution.</nz-form-label>
+        <br>
+        <nz-form-label [nzLabelAlign]="'left'">
+          To confirm deletion, type <strong>&nbsp; &quot;{{ deleteListName }}&quot; &nbsp;</strong> in the text input
+          field.
+        </nz-form-label>
+        <nz-form-item class="p-0">
+          <nz-form-control>
+            <input nz-input [placeholder]="deleteListName" type="text" [(ngModel)]="confirmationInput"
+              name="confirmationInput" required />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div class="col-12 d-flex justify-content-end">
+        <button nz-button class="alc btn-no" (click)="closeDeleteConfirmationModal()" nzType="primary">
+          <span nz-icon nzTheme="outline"></span> Cancel
+        </button>
+        <button nz-button class="alc btn-yes" nzType="primary" (click)="deleteList()"
+          [disabled]="confirmationInput !== deleteListName">
+          <span nz-icon nzTheme="outline"></span> Confirm
+        </button>
+      </div>
+    </div>
+  </ng-container>
+</nz-modal>

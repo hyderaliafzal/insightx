@@ -1,0 +1,158 @@
+<div class="row h-100 w-100">
+  <div class="col-1 p-0">
+    <div class="inner-canvas-white ps-2">
+      <p class="p-2 m-0 text-center fw-bold">Saved Graphs</p>
+      <hr style="margin: 0px !important;">
+      <div class="d-flex">
+        <div class="page-wrapper p-0">
+          <div class="list-group chart-list-bg">
+            <div class="list-group-item d-flex flex-column align-items-center text-center" *ngFor="let graph of graphs"
+              (click)="selectGraph(graph)">
+              <img [src]="graph.graphType?.icon" [alt]="graph.graphType?.label" />
+              <p class="title-text"> {{graph.name}} </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-11 pe-0">
+    <div class="inner-canvas-white">
+      <div class="canvas-grid">
+        <div class="dashboard-canvas canvas-dots">
+          <div class="resizable-draggable" *ngFor="let chart of chartRenders; index as i" trackBy="{{chart.uid}}"
+            [style.transform]="'translate(' + chart.x + 'px, ' + chart.y + 'px)'" [style.width]="chart.width + 'px'"
+            [style.height]="chart.height + 'px'" [attr.data-x]="chart.x" [attr.data-y]="chart.y">
+            <input type="hidden" value="{{chart.uid}}">
+            <img class="delete-cross" src="../../assets/images/icons/chart-delete-icon.svg"
+              (click)="deleteChart(chart.uid)">
+            <dashboard-chart [type]="chart.type" [data]="chart.data" [options]="chart.options">
+            </dashboard-chart>
+            <img class="resizable-handle" src="../../assets/images/icons/chartResize.svg">
+          </div>
+          <div class="h-5 d-flex justify-content-end saveRow">
+            <button nz-button nzType="primary" class="save-button" (click)="openDashboardModal()">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="h-5 d-flex justify-content-end saveRow">
+      <button nz-button nzType="primary" class="delete-button" (click)="openDeleteConfirmationModal()"
+        *ngIf="recordId > 0">Delete</button>
+      <button nz-button nzType="primary" class="save-button" (click)="openDashboardModal()">{{recordId > 0 ? 'Update' :
+        'Save'}}</button>
+      <button nz-button nzType="primary" class="ms-2" (click)="openEmbedGraphModal()"
+        *ngIf="recordId > 0">Embed</button>
+    </div>
+  </div>
+</div>
+
+<nz-modal [(nzVisible)]="isVisibleDeleteConfirmation" (nzOnCancel)="closeDeleteConfirmationModal()" [nzFooter]="null"
+  nzTitle="Confirmation" nzCentered nzWidth="45%">
+  <ng-container *nzModalContent>
+    <div class="row">
+      <div class="col-12">
+        <p class="label-text">Permanently delete dashboard?</p>
+        <p class="label-text">Deleting this dashboard may impact layouts where it is used - Proceed with Caution.</p>
+
+        <nz-form-label [nzLabelAlign]="'left'" nzFor="confirmationInput">
+          To confirm deletion, type <strong>&nbsp; &quot;{{ dashboardForm.get('name')?.value }}&quot; &nbsp;</strong> in
+          the text input field.
+        </nz-form-label>
+        <nz-form-item class="p-0">
+          <nz-form-control>
+            <input id="confirmationInput" nz-input [placeholder]="dashboardForm.get('name')?.value" type="text"
+              [(ngModel)]="confirmationInput" name="confirmationInput" required />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div class="col-12 d-flex justify-content-end">
+        <button nz-button class="alc btn-no" (click)="closeDeleteConfirmation()" nzType="primary">
+          <span nz-icon nzTheme="outline"></span> Cancel
+        </button>
+        <button nz-button class="alc btn-yes" nzType="primary" (click)="deleteDashboard()"
+          [disabled]="confirmationInput !== dashboardForm.get('name')?.value">
+          <span nz-icon nzTheme="outline"></span> Confirm
+        </button>
+      </div>
+    </div>
+  </ng-container>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isVisible" (nzOnCancel)="closeDashboardModal()" [nzFooter]="null" nzTitle="Save Dashboard">
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="dashboardForm" [nzNoColon]="true" (ngSubmit)="saveDashboard()">
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <nz-form-item>
+            <nz-form-label [nzLabelAlign]="'left'" nzRequired nzFor="name">
+              Dashboard Name
+            </nz-form-label>
+            <nz-form-control>
+              <input id="name" nz-input placeholder="e.g: Dashboard 1" formControlName="name" type="text"
+                autocomplete="off" />
+              <ng-container
+                *ngIf="dashboardForm.get('name')?.hasError('required') && dashboardForm.get('name')?.touched">
+                <label class="text-danger">This field is required.</label>
+              </ng-container>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 d-flex justify-content-end">
+          <button nz-button class="alc" nzType="primary">
+            <span nz-icon nzType="save"></span> Submit
+          </button>
+        </div>
+      </div>
+    </form>
+  </ng-container>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isVisibleEmbedGraph" (nzOnCancel)="closeEmbedGraphModal()" [nzFooter]="null"
+  nzTitle="Secure embed code">
+  <ng-container *nzModalContent>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <nz-form-item>
+          <nz-form-label [nzLabelAlign]="'left'" nzFor="embedUrl">
+            Here's a link you can use to embed this content.
+          </nz-form-label>
+          <nz-form-control>
+            <nz-input-group [nzSuffix]="copyEmbedUrl">
+              <input id="embedUrl" nz-input [(ngModel)]="embedUrl" type="text" readonly name="embedUrl" />
+            </nz-input-group>
+            <ng-template #copyEmbedUrl>
+              <nz-icon nz-icon nzType="copy" style="cursor: copy;" nzTheme="outline"
+                (click)="copyToClipboard(embedUrl)"></nz-icon>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <nz-form-item>
+          <nz-form-label [nzLabelAlign]="'left'" nzFor="iFrameUrl">
+            HTML you can paste into your blog or website.
+          </nz-form-label>
+          <nz-form-control>
+            <nz-input-group [nzSuffix]="copyiFrameUrl">
+              <input id="iFrameUrl" nz-input [(ngModel)]="iFrameUrl" type="text" readonly name="iFrameUrl" />
+            </nz-input-group>
+            <ng-template #copyiFrameUrl>
+              <nz-icon nz-icon nzType="copy" style="cursor: copy;" nzTheme="outline"
+                (click)="copyToClipboard(iFrameUrl)"></nz-icon>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 d-flex justify-content-end">
+        <button nz-button class="delete-button" nzType="primary" (click)="closeEmbedGraphModal()">
+          Close
+        </button>
+      </div>
+    </div>
+  </ng-container>
+</nz-modal>

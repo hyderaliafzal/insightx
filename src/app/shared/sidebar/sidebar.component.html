@@ -1,0 +1,62 @@
+<nav class="sidebar-nav" *ngIf="isFolded">
+    <ul id="sidebarnav" class="p-3">
+        <li class="sidebar-item" [class.active]="showMenu === sidebarnavItem.title"
+            *ngFor="let sidebarnavItem of sidebarnavItems">
+            <div class="nav-small-cap" *ngIf="sidebarnavItem.extralink === true">{{sidebarnavItem.title}}</div>
+            <a class="sidebar-link waves-effect waves-dark d-flex justify-content-between align-items-center"
+                [ngClass]="[sidebarnavItem.class]" *ngIf="!sidebarnavItem.extralink;"
+                [routerLink]="[sidebarnavItem.path]" (click)="addExpandClass(sidebarnavItem)">
+                <div class="d-flex align-items-center">
+                    <ng-container *ngIf="isImage(sidebarnavItem.icon); else iconClass">
+                        <img [src]="sidebarnavItem.icon" alt="{{ sidebarnavItem.title }}"
+                            style="width: 17px; height: 17px; margin-right: 15px;" />
+                    </ng-container>
+                    <ng-template #iconClass>
+                        <i [ngClass]="[sidebarnavItem.icon]"></i>
+                    </ng-template>
+                    <span class="sidebar-text">{{sidebarnavItem.title}}</span>
+                </div>
+
+                <ng-container *ngIf="sidebarnavItem.submenu.length != 0">
+                    <span nz-icon [nzType]="sidebarnavItem.dropdown ? 'right' : 'down'" nzTheme="outline"></span>
+                </ng-container>
+            </a>
+            <div cdkDropList class="example-list collapse first-level in sidebar-submenu-nav"
+                *ngIf="!sidebarnavItem.dropdown" (cdkDropListDropped)="drop($event)">
+                <div cdkDrag class="example-box sidebar-submenu-item ms-2"
+                    [class.active]="showSubMenuName + showSubMenu === item.title + item.path"
+                    *ngFor="let item of sidebarnavItem.submenu">
+                    <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
+                    <a class="sidebar-submenu-link" [ngClass]="[item.class]" *ngIf="!item.extralink"
+                        [routerLink]="[item.path]" (click)="routeToDashboard(sidebarnavItem, item)">
+                        <span class="sidebar-submenu-text ms-4">{{item.title}}</span>
+                    </a>
+                </div>
+            </div>
+        </li>
+    </ul>
+</nav>
+<nav class="sidebar-nav" *ngIf="!isFolded">
+    <ul id="sidebarnav" class="p-2">
+        <li class="sidebar-item" [class.active]="showMenu === sidebarnavItem.title"
+            *ngFor="let sidebarnavItem of sidebarnavItems"
+            [routerLinkActive]="showMenu === sidebarnavItem.title ? 'active' : ''">
+            <div class="nav-small-cap" *ngIf="sidebarnavItem.extralink === true">{{sidebarnavItem.title}}</div>
+            <a class="sidebar-link waves-effect waves-dark d-flex justify-content-center align-items-center"
+                [routerLink]="[sidebarnavItem.path]" [ngClass]="[sidebarnavItem.class]"
+                *ngIf="!sidebarnavItem.extralink;" (click)="addExpandClass(sidebarnavItem)"
+                [routerLinkActive]="showMenu === sidebarnavItem.title ? 'active' : ''">
+                <div class="d-flex align-items-center">
+                    <ng-container *ngIf="isImage(sidebarnavItem.icon)">
+                        <img [src]="sidebarnavItem.icon" alt="{{ sidebarnavItem.title }}"
+                            style="width: 17px; height: 17px;" />
+                    </ng-container>
+                </div>
+            </a>
+        </li>
+    </ul>
+</nav>
+<div class="collapse-btn-container-sidebar" [ngStyle]="{ left: isFolded ? '8.5%' : '3%' }">
+    <img [src]="!isFolded ? 'assets/images/icons/collapse.svg' : 'assets/images/icons/expand.svg'" type=""
+        (click)="toggleFold()">
+</div>

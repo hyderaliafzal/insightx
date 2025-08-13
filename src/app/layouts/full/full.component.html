@@ -1,0 +1,50 @@
+<!-- ============================================================== -->
+<!-- Main wrapper - style you can find in pages.scss -->
+<!-- ============================================================== -->
+<div id="main-wrapper" [ngClass]="{ 'show-sidebar': showMobileMenu }" dir="ltr" data-theme="light"
+  data-layout="vertical" [attr.data-sidebartype]="sidebartype" data-sidebar-position="absolute"
+  data-header-position="absolute" data-boxed-layout="full">
+  <header class="topbar" data-navbarbg="skin1">
+    <nav class="d-flex top-navbar navbar-expand-lg navbar-dark">
+      <div class="navbar-header" [ngClass]="expandLogo ? 'expand-logo' : ''" data-logobg="skin1">
+        <!-- This is for the sidebar toggle which is visible on mobile only -->
+        <a (click)="showMobileMenu = !showMobileMenu" class="nav-toggler waves-effect waves-light d-block d-lg-none"
+          href="javascript:void(0)">
+          <i [ngClass]="showMobileMenu ? 'bi bi-text-left fs-6' : 'bi bi-text-left fs-6'"></i>
+        </a>
+
+        <a class="navbar-brand">
+          <span class="logo-text">
+            <!-- Light Logo text -->
+            <img src="assets/images/logos/logo-white.png" class="dark-logo" alt="homepage" />
+          </span>
+        </a>
+      </div>
+
+      <div class="navbar-collapse collapse" id="navbarSupportedContent" data-navbarbg="skin1"
+        [ngbCollapse]="!isCollapsed">
+        <app-navigation (toggleSidebar)="toggleSidebarType()" class="w-100"></app-navigation>
+      </div>
+    </nav>
+  </header>
+  <div class="body-content">
+    <div class="page-wrapper">
+      <!-- <div class="container-fluid"> -->
+      <div class="row h-100">
+        <!-- Sidebar Column -->
+        <div [ngClass]="isFolded ? 'col-2' : 'cols-1'" class="h-100 pe-0">
+          <div class="left-sidebar" data-sidebarbg="skin6" (mouseover)="Logo()" (mouseout)="Logo()">
+            <app-sidebar class="h-100" (toggleSidebar)="toggleSidebar($event)"></app-sidebar>
+          </div>
+        </div>
+        <!-- Router Outlet Column -->
+        <div [ngClass]="isFolded ? 'col-10' : 'cols-11'" class="h-100 pe-0">
+          <div class="scroll-bar">
+            <router-outlet class="h-100"></router-outlet>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- </div> -->
+  </div>
+</div>

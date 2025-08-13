@@ -1,0 +1,10 @@
+@import "~ng-zorro-antd/ng-zorro-antd.min.css";
+@import "~ng-zorro-antd/style/index.min.css";
+@import "~ng-zorro-antd/button/style/index.min.css";
+
+@font-face {
+  font-family: "Graphik-Regular";
+  src: url("./assets/fonts/graphik/Graphik-Regular-Trial.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+}

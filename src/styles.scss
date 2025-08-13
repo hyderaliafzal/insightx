@@ -1,0 +1,457 @@
+/* You can add global styles to this file, and also import other style files */
+@import url("../node_modules/ng-zorro-antd/src/ng-zorro-antd.min.css");
+
+@font-face {
+  font-family: "Graphik-Light";
+  src: url("./assets/fonts/Graphik-Light-Trial.woff") format("woff");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Graphik-Light-Italic";
+  src: url("./assets/fonts/Graphik-LightItalic-Trial.woff") format("woff");
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Graphik-Medium";
+  src: url("./assets/fonts/Graphik-Medium-Trial.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Graphik-Medium-Italic";
+  src: url("./assets/fonts/Graphik-MediumItalic-Trial.woff") format("woff");
+  font-weight: 500;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Graphik-Regular";
+  src: url("./assets/fonts/Graphik-Regular-Trial.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Graphik-Regular-Italic";
+  src: url("./assets/fonts/Graphik-RegularItalic-Trial.woff") format("woff");
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Graphik-Semibold";
+  src: url("./assets/fonts/Graphik-Semibold-Trial.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Graphik-Semibold-Italic";
+  src: url("./assets/fonts/Graphik-SemiboldItalic-Trial.woff") format("woff");
+  font-weight: 500;
+  font-style: italic;
+}
+
+*,
+html {
+  font-family: "Graphik-Regular";
+}
+
+.text-danger {
+  color: red;
+}
+
+.ant-btn-primary:focus,
+.ant-btn-primary,
+.ant-btn-primary:hover {
+  color: #fff;
+  border-color: #8255A1;
+  background: #8255A1;
+  border-radius: 5px;
+}
+
+.alc {
+  display: flex;
+  align-items: center;
+}
+
+.ant-form-item-label>label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
+  content: "";
+}
+
+.ant-form-item-label>label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::after {
+  display: inline-block;
+  margin-right: 4px;
+  color: #ff4d4f;
+  font-size: 14px;
+  font-family: SimSun, sans-serif;
+  line-height: 1;
+  content: "*";
+}
+
+.ant-form-item-label>label::after {
+  content: '';
+  position: relative;
+  top: -.5px;
+  margin: 0 8px 0 2px;
+}
+
+.ant-form-item {
+  padding: 0 10px;
+  margin: 0px 0 12px;
+}
+
+.ant-tabs {
+  color: #8255a1;
+}
+
+.ant-tabs-tab {
+  margin-left: 10px;
+}
+
+.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #8255a1;
+}
+
+.ant-tabs-tab-btn {
+  color: #8255a1;
+  
+
+  &:hover {
+    color: #8255a1
+  }
+}
+
+.ant-tabs-ink-bar {
+  height: 2px;
+  background: #8255a1;
+}
+
+.ant-notification,
+.ant-notification-topLeft,
+.ant-notification-topRight {
+  top: 65px !important;
+}
+
+.text {
+  font-family: 'Graphik-Regular';
+  font-style: normal;
+  font-size: 1rem;
+  color: #67757c;
+}
+
+.sidebar-text {
+  font-family: 'Graphik-Regular';
+  font-size: 1rem !important;
+}
+
+.sidebar-submenu-text {
+  font-family: 'Graphik-Regular';
+  font-size: 1rem !important;
+}
+
+.title-text {
+  font-family: 'Graphik-Regular';
+  font-style: normal;
+  font-size: 0.75rem !important;
+  color: #67757c;
+}
+.heading-text {
+  font-family: 'Graphik-Regular';
+  font-weight: bold;
+  font-size: 1rem !important;
+  color: #000000;
+}
+
+.ant-form-item-label.heading-text > label {
+  color: #424242 !important;
+  font-size: inherit;
+}
+
+.ant-form-item-label.title-text > label {
+  color: #67757c !important;
+  font-size: inherit;
+}
+
+.ant-tabs-centered>.ant-tabs-nav .ant-tabs-nav-wrap:not([class*=ant-tabs-nav-wrap-ping]) {
+  justify-content: end !important;
+}
+
+.ant-tabs-content {
+  height: 100% !important;
+}
+
+.ant-tabs-tabpane {
+  height: 100% !important;
+}
+
+.ant-switch {
+  min-width: 38px;
+}
+
+.ant-card-head {
+  background: #F3F3F3 !important;
+  border-radius: 10px 10px 0 0;
+}
+
+.editButton {
+  color: #8255A1;
+}
+
+.deleteButton {
+  color: #EDA53A;
+}
+
+.ant-table-container,
+.ant-table-container table>thead>tr:first-child th:first-child {
+  border-top-left-radius: 10px;
+}
+
+.ant-table-container,
+.ant-table-container table>thead>tr:first-child th:last-child {
+  border-top-right-radius: 10px;
+}
+
+
+.ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover {
+  border-color: #8255A1;
+}
+
+.ant-input-affix-wrapper-focused,
+.ant-input-affix-wrapper:focus {
+  border-color: #8255A1;
+  box-shadow: 0 0 0 2px rgba(130, 85, 161, .2);
+}
+
+.ant-input-focused,
+.ant-input:focus {
+  border-color: #8255A1;
+  box-shadow: 0 0 0 2px rgba(130, 85, 161, .2);
+}
+
+.ant-input:hover {
+  border-color: #8255A1;
+}
+
+.ant-tooltip-arrow {
+  display: none;
+}
+
+.ant-tooltip-inner {
+  background-color: #8255A1;
+  text-align: left;
+  color: #fff;
+  padding: 6px 8px;
+  min-width: 35px;
+  min-height: 32px;
+  text-decoration: none;
+  white-space: nowrap;
+  border-radius: 5px;
+  overflow: visible;
+  word-break: normal;
+  display: inline-block;
+  z-index: 1000;
+}
+
+.ant-input {
+  border-radius: 5px;
+}
+
+.ant-input-affix-wrapper {
+  border-radius: 5px;
+}
+
+.ant-modal-header {
+  background-color: #F3F3F3;
+  border-radius: 10px 10px 0 0;
+}
+
+.ant-modal-content {
+  border-radius: 10px;
+}
+
+.ant-btn>.anticon+span,
+.ant-btn>span+.anticon {
+  margin-left: 0px;
+}
+
+.btn-no {
+  background-color: #8255a1;
+  color: white;
+  border: none;
+  margin-right: 10px;
+}
+
+.btn-yes {
+  background-color: #ff0000;
+  color: white;
+  border: none;
+}
+
+.lbl-confirmation {
+  padding-bottom: 20px;
+}
+
+.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  color: #8255A1;
+  border-radius: 5px;
+  box-shadow: 0 0 0 2px rgba(130, 85, 161, 0.2);
+  border-color: #8255A1;
+}
+
+.ant-select:hover .ant-select-selector {
+  border-color: #8255A1 !important;
+  box-shadow: 0 0 5px rgba(130, 85, 161, 0.4);
+}
+
+.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.ant-select-focused,
+.ant-select:focus {
+  color: #8255A1;
+  border-radius: 5px;
+  box-shadow: 0 0 0 2px rgba(130, 85, 161, 0.2);
+}
+
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #8255A1;
+  border: 1px solid #8255A1;
+}
+
+.ant-checkbox .ant-checkbox-checked:hover {
+  background-color: #8255A1;
+  border: 1px solid #8255A1;
+}
+.ant-checkbox-checked:hover {
+  background-color: #8255A1;
+  border: 1px solid #8255A1;
+  border-radius: 5px;
+}
+
+.ant-checkbox-input:focus+.ant-checkbox-inner,
+.ant-checkbox-wrapper:hover .ant-checkbox-inner,
+.ant-checkbox:hover .ant-checkbox-inner,
+.ant-checkbox-checked:hover .ant-checkbox-inner,
+.ant-checkbox .ant-checkbox-inner {
+  border-color: #8255A1;
+  border-radius: 5px;
+}
+
+.ant-checkbox-wrapper-checked:hover .ant-checkbox-checked:hover {
+  border-color: #8255A1;
+}
+
+.ant-checkbox-checked::after {
+  border: 1px solid #8255A1;
+  border-radius: 5px;
+  animation: none;
+}
+
+.ant-slider-handle {
+  border-color: #8255A1;
+}
+
+.ant-slider-handle:focus {
+  border-color: #8255A1;
+  box-shadow: 0 0 0 5px rgba(130, 85, 161, 0.3);
+}
+.ant-slider-track {
+  background-color: #8255A1;
+}
+
+.ant-slider:hover .ant-slider-track {
+  background-color: #8255A1;
+}
+.ant-slider:hover .ant-slider-handle {
+  border-color: #8255A1;
+}
+
+.ant-slider:hover .ant-slider-handle:not(.ant-tooltip-open) {
+  border-color: #8255A1;
+}
+
+.ant-input-number-focused, .ant-input-number:hover , .ant-input-number:focus{
+  border-color: #8255A1;
+}
+.ant-input-number-focused, .ant-input-number:focus {
+  border-color: #8255A1;
+  box-shadow: 0 0 0 2px rgba(130, 85, 161, 0.3);
+}
+
+.ant-input-number-handler:hover .ant-input-number-handler-down-inner, .ant-input-number-handler:hover .ant-input-number-handler-up-inner {
+  color: #8255A1;
+}
+
+.ant-table-thead>tr>th {
+  background: rgba(176, 96, 231, 0.07);
+}
+
+.ant-table-thead th.ant-table-column-sort,
+.ant-table-thead th.ant-table-column-has-sorters:hover {
+  background: rgba(157, 47, 230, 0.25);
+}
+
+.ant-table-header{
+  border-radius: 10px 10px 0px 0px;
+}
+
+.nz-table-hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.nz-table-hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.ant-table.ant-table-small .nz-table-hide-scrollbar {
+  scrollbar-color: transparent transparent;
+}
+
+.ant-table.ant-table-small .nz-table-hide-scrollbar::-webkit-scrollbar {
+  background-color: transparent !important;
+}
+.ant-table-column-sorter {
+  color: white;
+}
+
+.ant-table-column-sorter-down.active, .ant-table-column-sorter-up.active {
+  color: #8255a1;
+}
+
+.ant-table-column-sorters:hover .ant-table-column-sorter {
+  color: white;
+}
+
+.ant-tabs-tab {
+  padding: 12px 6px;
+}
+
+.ant-color-picker-trigger:hover {
+  border-color: #8255a1;
+}
+
+.ant-color-picker-trigger {
+  border: none;
+}
+
+.ant-switch-checked {
+  background-color: #8255A1;
+}
+
+.ant-collapse-content>.ant-collapse-content-box {
+  padding: 16px 0px;
+}
+
+.ant-collapse {
+  border-radius: 5px;
+}

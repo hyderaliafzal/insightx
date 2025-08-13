@@ -1,0 +1,81 @@
+// Theme colors
+#main-wrapper {
+  &[data-layout="vertical"]{
+    /*This is for the logo bg*/
+    .topbar .top-navbar .navbar-header {
+      &[data-logobg="skin6"] {
+        background: $skin6;
+        .navbar-brand {
+          .dark-logo {
+            display: inline;
+          }
+          .light-logo {
+            display: none;
+          }
+        }
+        .nav-toggler,
+        .topbartoggler {
+          color: $body-color;
+        }
+      }
+    }
+    .topbar .navbar-collapse,
+    .topbar {
+      &[data-navbarbg="skin1"] {
+        background: $skin1;
+      }
+    }
+    /*This is for the sidebar bg*/
+    .left-sidebar {
+      &[data-sidebarbg="skin6"] {
+        background: $skin6;
+        .sidebar-nav {
+          ul {
+            border-radius: 5px;
+            background: $skin6;
+            .sidebar-item {
+              &.active {
+                > .sidebar-link {
+                  color: $sidebar-menu-text;
+                  font-size: 70%;
+                  font-weight: 800;
+    
+                  i, img {
+                    color: $purpule-shade;
+                    filter: invert(37%) sepia(11%) saturate(2478%) hue-rotate(232deg) brightness(99%) contrast(87%);
+                  }
+                }
+              }
+              .sidebar-link {
+                color: #575353;
+                font-size: 70%;
+    
+                i {
+                  color: $purpule-shade;
+                }
+    
+              }
+    
+              .first-level {
+                .sidebar-submenu-item {
+                  &.active > .sidebar-submenu-link {
+                    color: #575353;
+                    font-size: 70%;
+                    font-weight: 800;
+                  }
+    
+                  .sidebar-submenu-link {
+                    // Regular styles for other submenu items
+                    color: #575353;
+                    font-size: 70%;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    
+  }
+}

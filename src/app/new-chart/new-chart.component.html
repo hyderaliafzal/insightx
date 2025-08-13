@@ -1,0 +1,624 @@
+<div class="row h-100 w-100">
+  <div class="p-0"
+    [ngClass]="isCollapsedData && isCollapsedConfig ? 'cols-90' : !isCollapsedData && !isCollapsedConfig ? 'col-8 h-100' : (isCollapsedData && !isCollapsedConfig) || (!isCollapsedData && isCollapsedConfig) ? 'cols-78': '' ">
+    <div class="inner-canvas-white p-2">
+      <nz-tabset>
+        <nz-tab [nzTitle]="'Charts'" (nzClick)="setActiveTab('chart')">
+          <div class="row h-100">
+            <div class="col-1">
+              <div class="list-group chart-list-bg">
+                <div class="list-group-item d-flex flex-column align-items-center text-center"
+                  *ngFor="let graphType of graphTypes" (click)="selectGraph(graphType)"
+                  [ngClass]="selectedGraphType.label === graphType.label ? 'selectedGraph':''">
+                  <img [src]="graphType.icon" [alt]="graphType.label" class="mb-2" />
+                  <p class="mb-0"> {{graphType.label}} </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-11">
+              <div class="h-100 d-flex align-items-center" *ngIf="!isCard">
+                <ng-container *ngFor="let chart of chartRenders; index as i">
+                  <app-charts [type]="chart.type" [data]="chart.data" [options]="chart.options"></app-charts>
+                </ng-container>
+              </div>
+              <div class="h-100 d-flex align-items-center justify-content-center" *ngIf="isCard">
+                <nz-card [nzBordered]="false">
+                  <div nz-card-header>
+                    <div style="color: rgba(0,0,0,.85); font-size: 0.75rem; ; height: 0.75rem; font-weight: bold;">
+                      {{ cardSetupForm.get('cardTitle')?.value }}
+                    </div>
+                  </div>
+                  <div class="ant-modal-body d-flex flex-column justify-content-center align-items-center h-100">
+                    <div class="mb-1" style="font-size: 3rem; font-weight: bold;">
+                      {{ bindingColumnValue }}
+                    </div>
+                    <div style="font-size: 1rem; color: #757575;">
+                      {{ displayAggregate(cardSetupForm.get('matricFunction').value) }}
+                    </div>
+                  </div>
+                </nz-card>
+              </div>
+            </div>
+          </div>
+          <div class="row saveRow">
+            <div class="col-12">
+              <div class="h-5 d-flex justify-content-end">
+                <button type="button" (click)="saveChart()" class="btn btn-primary save-button">Save</button>
+                <img class="mx-3" src="assets/images/icons/aiIcon.png" alt="Ai Icon" width="37px" height="40px" />
+              </div>
+            </div>
+          </div>
+        </nz-tab>
+        <nz-tab [nzTitle]="'Tables'" (nzClick)="setActiveTab('table')">
+          <div class="row ">
+            <div class="col-12">
+              <div class="row px-3">
+                <div class="col-11">
+                  <div class="tags-container">
+                    <nz-tag *ngFor="let item of dataTablefilters" nzMode="closeable" (nzOnClose)="removeItem(item)">
+                      {{ item.name }} {{item.operationKey}} {{item.keyword}}
+                    </nz-tag>
+                  </div>
+                </div>
+                <div class="col-1 pe-0 filter-group">
+                  <div (click)="openFiltersModal()" class="filter-btn">
+                    <span nz-icon nzType="filter"></span> &nbsp; Filters
+                  </div>
+                  <div (click)="exportData()" class="filter-btn" *ngIf="dataSource !== ''">
+                    <span nz-icon [nzType]="!downloadLoading ? 'download' : ''"></span> <span
+                      [ngClass]="downloadLoading ? 'spinner-border' : '' "></span> &nbsp; Export
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 pe-4" style="padding-left: 2rem;">
+              <nz-table #table [nzData]="tableData" [nzBordered]="true" [nzFrontPagination]="false"
+                [nzLoading]="loading" [nzScroll]="{ x: '100%', y: 'calc(100vh - 275px)' }"
+                (nzQueryParams)="getSortableDataForTable($event)">
+                <thead>
+                  <tr>
+                    <ng-container *ngFor="let column of tableDataColumns">
+                      <th *ngIf="column.default" [nzColumnKey]="column.name" [nzSortOrder]="column.sortOrder"
+                        [nzSortFn]="column.sortFn" [nzSortDirections]="column.sortDirections"
+                        [nzWidth]="calculateColumnWidth(column.name)">
+                        {{ column.name }}
+                      </th>
+                    </ng-container>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of table.data">
+                    <ng-container *ngFor="let col of tableDataColumns">
+                      <td *ngIf="col.default">
+                        {{ item[col.name] }}
+                      </td>
+                    </ng-container>
+                  </tr>
+                </tbody>
+              </nz-table>
+            </div>
+          </div>
+        </nz-tab>
+      </nz-tabset>
+    </div>
+  </div>
+
+  <div class="col-2 h-100" *ngIf="!isCollapsedConfig"
+    [ngClass]="!isCollapsedData && !isCollapsedConfig ? 'pe-0' : 'pe-0'" style="position:relative">
+    <div class="inner-canvas-white">
+      <nz-tabset [(nzSelectedIndex)]="selectedConfTab">
+        <nz-tab nzTitle="Setup">
+          <form [formGroup]="graphForm" *ngIf="!isCard">
+            <div class="row">
+              <div class="col-12">
+                <nz-form-item>
+                  <nz-form-label [nzLabelAlign]="'left'" class="title-text">
+                    Title
+                  </nz-form-label>
+                  <nz-form-control>
+                    <input nz-input placeholder="Give your graph a name" formControlName="graphTitle" type="text"
+                      required name="graphTitle" />
+                    <ng-container *ngIf="graphForm.get('graphTitle')?.invalid && graphForm.get('graphTitle')?.touched">
+                      <label class="text-danger mt-2" *ngIf="graphForm.get('graphTitle')?.hasError('required')">This
+                        field is
+                        required.</label>
+                    </ng-container>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div class="col-12">
+                <nz-form-item class="m-0">
+                  <nz-form-label [nzLabelAlign]="'left'" class="title-text">
+                    Dimmension
+                  </nz-form-label>
+                </nz-form-item>
+              </div>
+              <div class="col-12">
+                <nz-form-item>
+                  <nz-form-control>
+                    <nz-select formControlName="selectedXColumnValue" nzPlaceHolder="Select X" nzShowSearch
+                      (ngModelChange)="populateMatric()">
+                      <nz-option *ngFor="let header of checkedHeaders" [nzValue]="header"
+                        [nzLabel]="header.name"></nz-option>
+                    </nz-select>
+                    <ng-container
+                      *ngIf="graphForm.get('selectedXColumnValue')?.invalid && graphForm.get('selectedXColumnValue')?.touched">
+                      <label class="text-danger mt-2"
+                        *ngIf="graphForm.get('selectedXColumnValue')?.hasError('required')">This
+                        field is
+                        required.</label>
+                    </ng-container>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div *ngIf="this.graphForm.get('selectedXColumnValue').value" class="col-12 mb-3">
+                <div class="row selected-item">
+                  <div class="col-sm-2">
+                    <span class="setup-index-box">{{this.graphForm.get('selectedXColumnValue').value?.isNumber ? '123' :
+                      'abc' }}</span>
+                  </div>
+                  <div class="col-sm-10 d-flex justify-content-between">
+                    <span>{{ this.graphForm.get('selectedXColumnValue').value?.name }}</span>
+                    <button type="button" class="btn-close" aria-label="Close" (click)="clearSelection('X')"></button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12" *ngIf="![3, 4].includes(selectedGraphType.id)">
+                <nz-form-item>
+                  <nz-form-control>
+                    <nz-select formControlName="selectedYColumnValue" nzPlaceHolder="Select Y" nzShowSearch
+                      (ngModelChange)="renderGraphData()">
+                      <nz-option *ngFor="let header of checkedHeaders" [nzValue]="header"
+                        [nzLabel]="header.name"></nz-option>
+                    </nz-select>
+                    <ng-container
+                      *ngIf="graphForm.get('selectedYColumnValue')?.invalid && graphForm.get('selectedYColumnValue')?.touched">
+                      <label class="text-danger mt-2"
+                        *ngIf="graphForm.get('selectedYColumnValue')?.hasError('required')">This
+                        field is
+                        required.</label>
+                    </ng-container>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div *ngIf="this.graphForm.get('selectedYColumnValue').value" class="col-12  mb-3">
+                <div class="row selected-item" *ngIf="![3, 4].includes(selectedGraphType.id)">
+                  <div class="col-sm-2">
+                    <span class="setup-index-box">{{this.graphForm.get('selectedYColumnValue').value?.isNumber ? '123' :
+                      'abc' }}</span>
+                  </div>
+                  <div class="col-sm-10 d-flex justify-content-between">
+                    <span>{{ this.graphForm.get('selectedYColumnValue').value?.name }}</span>
+                    <button type="button" class="btn-close" aria-label="Close" (click)="clearSelection('Y')"></button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <nz-form-item class="m-0">
+                  <nz-form-label [nzLabelAlign]="'left'" class="title-text">
+                    Matric
+                  </nz-form-label>
+                </nz-form-item>
+              </div>
+              <div class="col-12">
+                <nz-form-item>
+                  <nz-form-control>
+                    <nz-select formControlName="matricFunction" nzPlaceHolder="Select Matric" nzShowSearch
+                      (ngModelChange)="renderGraphData()">
+                      <nz-option *ngFor="let item of matricArr" [nzValue]="item?.value"
+                        [nzLabel]="item?.label"></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+          </form>
+          <form [formGroup]="cardSetupForm" *ngIf="isCard">
+            <div class="row">
+              <div class="col-12">
+                <nz-form-item>
+                  <nz-form-label [nzLabelAlign]="'left'" class="title-text">
+                    Title
+                  </nz-form-label>
+                  <nz-form-control>
+                    <input nz-input placeholder="Give your card a name" formControlName="cardTitle" type="text"
+                      name="graphTitle" />
+                    <ng-container
+                      *ngIf="cardSetupForm.get('cardTitle')?.invalid && cardSetupForm.get('cardTitle')?.touched">
+                      <label class="text-danger mt-2" *ngIf="cardSetupForm.get('cardTitle')?.hasError('required')">This
+                        field
+                        is
+                        required.</label>
+                    </ng-container>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div class="col-12">
+                <nz-form-item class="m-0">
+                  <nz-form-label [nzLabelAlign]="'left'" class="title-text">
+                    Binding
+                  </nz-form-label>
+                </nz-form-item>
+              </div>
+              <div class="col-12">
+                <nz-form-item>
+                  <nz-form-control>
+                    <nz-select formControlName="bindingColumn" nzPlaceHolder="Select Binding" nzShowSearch
+                      (ngModelChange)="populateMatric()">
+                      <nz-option *ngFor="let header of checkedHeaders" [nzValue]="header"
+                        [nzLabel]="header.name"></nz-option>
+                    </nz-select>
+                    <ng-container
+                      *ngIf="cardSetupForm.get('bindingColumn')?.invalid && cardSetupForm.get('bindingColumn')?.touched">
+                      <label class="text-danger mt-2"
+                        *ngIf="cardSetupForm.get('bindingColumn')?.hasError('required')">This
+                        field is
+                        required.</label>
+                    </ng-container>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div class="col-12">
+                <nz-form-item class="m-0">
+                  <nz-form-label [nzLabelAlign]="'left'" class="title-text">
+                    Matric
+                  </nz-form-label>
+                </nz-form-item>
+              </div>
+              <div class="col-12">
+                <nz-form-item>
+                  <nz-form-control>
+                    <nz-select formControlName="matricFunction" nzPlaceHolder="Select Matric" nzShowSearch
+                      (ngModelChange)="getMatricOperationValue()">
+                      <nz-option *ngFor="let item of matricArr" [nzValue]="item?.value"
+                        [nzLabel]="item?.value"></nz-option>
+                    </nz-select>
+                    <ng-container
+                      *ngIf="cardSetupForm.get('matricFunction')?.invalid && cardSetupForm.get('matricFunction')?.touched">
+                      <label class="text-danger mt-2"
+                        *ngIf="cardSetupForm.get('matricFunction')?.hasError('required')">This
+                        field is
+                        required.</label>
+                    </ng-container>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+          </form>
+        </nz-tab>
+        <nz-tab nzTitle="Style">
+          <div class="row h-100">
+            <div class="col-12 h-100">
+              <form [formGroup]="styleForm" style="max-height: 65vh; overflow-y: auto; overflow-x: hidden;"
+                *ngIf="graphForm.get('selectedXColumnValue').value && !isCard && selectedGraphType.id">
+
+                <nz-collapse nzAccordion>
+                  <nz-collapse-panel nzHeader="Scales" nzActive="false" *ngIf="filteredFieldConfig?.scales?.length > 0">
+                    <div class="row">
+                      <div class="col-12" *ngFor="let field of filteredFieldConfig.scales">
+                        <nz-form-item class="row">
+                          <div class="p-0" [ngClass]="field?.type === 'heading' ? 'col-12' : 'col-6'">
+                            <nz-form-label [nzLabelAlign]="'left'"
+                              [ngClass]="field?.type === 'heading' ? 'heading-text' : 'title-text'">
+                              {{ field?.label }}
+                            </nz-form-label>
+                          </div>
+                          <div class="col-6 p-0" [ngClass]="field?.type === 'switch' ? 'text-end' : ''">
+                            <input *ngIf="field?.type === 'number'" nz-input [placeholder]="field?.placeholder"
+                              [formControlName]="field.key" type="number" nz-tooltip [nzTooltipTitle]="field?.tooltip"
+                              (keyup)="onScaleChange($event, field.property, field.axis)" />
+
+                            <nz-select *ngIf="field?.type === 'select'" [formControlName]="field?.key"
+                              [nzPlaceHolder]="field?.placeholder" class="w-100" nz-tooltip
+                              [nzTooltipTitle]="field?.tooltip"
+                              (ngModelChange)="onScaleChange($event, field.property, field.axis)">
+                              <nz-option *ngFor="let option of field?.options" [nzValue]="option.value"
+                                [nzLabel]="option.key">
+                              </nz-option>
+                            </nz-select>
+
+                            <nz-switch *ngIf="field?.type === 'switch'" [formControlName]="field?.key" nz-tooltip
+                              [nzTooltipTitle]="field?.tooltip"
+                              (ngModelChange)="onScaleChange($event, field.property, field.axis)">
+                            </nz-switch>
+
+                            <ng-template #tooltipTemplate>
+                              <span nz-icon nz-tooltip [nzTooltipTitle]="field.tooltip" nzType="info-circle"></span>
+                            </ng-template>
+                          </div>
+                        </nz-form-item>
+                      </div>
+                    </div>
+                  </nz-collapse-panel>
+
+                  <nz-collapse-panel nzHeader="Graph" nzActive="false" *ngIf="filteredFieldConfig?.graph?.length > 0">
+                    <div class="row">
+                      <div class="col-12" *ngFor="let field of filteredFieldConfig.graph">
+                        <nz-form-item class="row">
+                          <div class="p-0" [ngClass]="field?.type === 'heading' ? 'col-12' : 'col-6'">
+                            <nz-form-label [nzLabelAlign]="'left'"
+                              [ngClass]="field?.type === 'heading' ? 'heading-text' : 'title-text'">
+                              {{ field?.label }}
+                            </nz-form-label>
+                          </div>
+
+                          <div class="col-6 p-0" [ngClass]="field?.type === 'switch' ? 'text-end' : ''">
+                            <nz-color-picker *ngIf="field?.type === 'color-picker'" nzShowText class="w-100"
+                              [formControlName]="field.key" nz-tooltip [nzTooltipTitle]="field?.tooltip"
+                              (nzOnChange)="onPropertyValueChange($event, field.key)">
+                            </nz-color-picker>
+
+                            <input *ngIf="field?.type === 'number'" nz-input [placeholder]="field?.placeholder"
+                              [formControlName]="field.key" type="number" nz-tooltip [nzTooltipTitle]="field?.tooltip"
+                              (keyup)="onPropertyValueChange($event, field.key)" />
+
+                            <nz-select *ngIf="field?.type === 'select'" [formControlName]="field.key"
+                              [nzPlaceHolder]="field?.placeholder" class="w-100" nz-tooltip
+                              [nzTooltipTitle]="field?.tooltip"
+                              (ngModelChange)="onPropertyValueChange($event, field.key)">
+                              <nz-option *ngFor="let option of field?.options" [nzValue]="option.value"
+                                [nzLabel]="option.key">
+                              </nz-option>
+                            </nz-select>
+
+                            <nz-switch *ngIf="field?.type === 'switch'" [formControlName]="field.key" nz-tooltip
+                              [nzTooltipTitle]="field?.tooltip"
+                              (ngModelChange)="onPropertyValueChange($event, field.key)">
+                            </nz-switch>
+                          </div>
+                        </nz-form-item>
+                      </div>
+                    </div>
+                  </nz-collapse-panel>
+
+                  <nz-collapse-panel nzHeader="Legend" nzActive="false" *ngIf="filteredFieldConfig?.legend?.length > 0">
+                    <div class="row">
+                      <div class="col-12" *ngFor="let field of filteredFieldConfig?.legend">
+                        <nz-form-item class="row" *ngIf="field.key === 'isLegendShow'">
+                          <div class="p-0" [ngClass]="field?.type === 'heading' ? 'col-12' : 'col-6'">
+                            <nz-form-label [nzLabelAlign]="'left'"
+                              [ngClass]="field?.type === 'heading' ? 'heading-text' : 'title-text'">
+                              {{ field?.label }}
+                            </nz-form-label>
+                          </div>
+
+                          <div class="col-6 p-0 text-end">
+                            <nz-switch [formControlName]="field?.key" nz-tooltip [nzTooltipTitle]="field?.tooltip"
+                              [nzCheckedChildren]="checkedTemplate" [nzUnCheckedChildren]="unCheckedTemplate"
+                              (ngModelChange)="onLegendDisplayChange($event, field.property)">
+                            </nz-switch>
+                            <ng-template #checkedTemplate><nz-icon nzType="check" /></ng-template>
+                            <ng-template #unCheckedTemplate><nz-icon nzType="close" /></ng-template>
+                          </div>
+                        </nz-form-item>
+                      </div>
+
+                      <div class="col-12" *ngFor="let field of filteredFieldConfig?.legend">
+                        <nz-form-item class="row"
+                          *ngIf="styleForm.get('isLegendShow')?.value && field.key !== 'isLegendShow'">
+                          <div class="p-0" [ngClass]="field?.type === 'heading' ? 'col-12' : 'col-6'">
+                            <nz-form-label [nzLabelAlign]="'left'"
+                              [ngClass]="field?.type === 'heading' ? 'heading-text' : 'title-text'">
+                              {{ field?.label }}
+                            </nz-form-label>
+                          </div>
+
+                          <div class="col-6 p-0">
+                            <input *ngIf="field?.type === 'number'" nz-input [placeholder]="field?.placeholder"
+                              [formControlName]="field?.key" type="number" nz-tooltip [nzTooltipTitle]="field?.tooltip"
+                              (ngModelChange)="onLegendChange($event, field.property)" />
+
+                            <nz-select *ngIf="field?.type === 'select'" [formControlName]="field.key"
+                              [nzPlaceHolder]="field?.placeholder" class="w-100" nz-tooltip
+                              [nzTooltipTitle]="field?.tooltip"
+                              (ngModelChange)="onLegendChange($event, field.property)">
+                              <nz-option *ngFor="let option of field?.options" [nzValue]="option.value"
+                                [nzLabel]="option.key">
+                              </nz-option>
+                            </nz-select>
+                          </div>
+                        </nz-form-item>
+                      </div>
+                    </div>
+                  </nz-collapse-panel>
+
+                  <nz-collapse-panel nzHeader="Tooltip" nzActive="false"
+                    *ngIf="filteredFieldConfig?.tooltip?.length > 0">
+                    <div class="row">
+                      <div class="col-12" *ngFor="let field of filteredFieldConfig.tooltip">
+                        <nz-form-item class="row">
+                          <div class="p-0" [ngClass]="field?.type === 'heading' ? 'col-12' : 'col-6'">
+                            <nz-form-label [nzLabelAlign]="'left'"
+                              [ngClass]="field?.type === 'heading' ? 'heading-text' : 'title-text'">
+                              {{ field?.label }}
+                            </nz-form-label>
+                          </div>
+                          <div class="col-6 p-0" [ngClass]="field?.type === 'select' ? 'custom-group' : ''">
+                            <input *ngIf="field?.type === 'number'" nz-input [placeholder]="field?.placeholder"
+                              [formControlName]="field.key" type="number" nz-tooltip [nzTooltipTitle]="field?.tooltip"
+                              (keyup)="onTooltipChange($event, field.property)" />
+
+                            <nz-select *ngIf="field?.type === 'select'" [formControlName]="field?.key"
+                              [nzPlaceHolder]="field?.placeholder" class="w-100" nz-tooltip
+                              [nzTooltipTitle]="field?.tooltip"
+                              (ngModelChange)="onTooltipChange($event, field.property)">
+                              <nz-option *ngFor="let option of field?.options" [nzValue]="option.value"
+                                [nzLabel]="option.key"></nz-option>
+                            </nz-select>
+                          </div>
+                        </nz-form-item>
+                      </div>
+                    </div>
+                  </nz-collapse-panel>
+                  <nz-collapse-panel nzHeader="Hover" nzActive="false" *ngIf="filteredFieldConfig?.hover?.length > 0">
+                    <div class="row">
+                      <div class="col-12" *ngFor="let field of filteredFieldConfig?.hover">
+                        <nz-form-item class="row">
+                          <div class="p-0" [ngClass]="field?.type === 'heading' ? 'col-12' : 'col-6'">
+                            <nz-form-label [nzLabelAlign]="'left'"
+                              [ngClass]="field?.type === 'heading' ? 'heading-text' : 'title-text'">
+                              {{ field?.label }}
+                            </nz-form-label>
+                          </div>
+                          <div class="col-6 p-0" [ngClass]="field?.type === 'select' ? 'custom-group' : ''">
+                            <nz-color-picker *ngIf="field?.type === 'color-picker'" nzShowText class="w-100" nz-tooltip
+                              [nzTooltipTitle]="field?.tooltip" [formControlName]="field.key"
+                              (nzOnChange)="onPropertyValueChange($event, field.key)">
+                            </nz-color-picker>
+
+                            <input *ngIf="field?.type === 'number'" nz-input [placeholder]="field?.placeholder"
+                              nz-tooltip [nzTooltipTitle]="field?.tooltip" [formControlName]="field?.key" type="number"
+                              (keyup)="onPropertyValueChange($event, field.key)" />
+
+                            <nz-select *ngIf="field?.type === 'select'" [formControlName]="field?.key" nz-tooltip
+                              [nzTooltipTitle]="field?.tooltip" [nzPlaceHolder]="field?.placeholder" class="w-100"
+                              (ngModelChange)="onPropertyValueChange($event, field.key)">
+                              <nz-option *ngFor="let option of field?.options" [nzValue]="option.value"
+                                [nzLabel]="option.key"></nz-option>
+                            </nz-select>
+                          </div>
+                        </nz-form-item>
+                      </div>
+                    </div>
+                  </nz-collapse-panel>
+
+                  <nz-collapse-panel nzHeader="Point" nzActive="false" *ngIf="filteredFieldConfig?.point?.length > 0">
+                    <div class="row">
+                      <div class="col-12" *ngFor="let field of filteredFieldConfig?.point">
+                        <nz-form-item class="row">
+                          <div class="p-0" [ngClass]="field?.type === 'heading' ? 'col-12' : 'col-6'">
+                            <nz-form-label [nzLabelAlign]="'left'"
+                              [ngClass]="field?.type === 'heading' ? 'heading-text' : 'title-text'">
+                              {{ field?.label }}
+                            </nz-form-label>
+                          </div>
+                          <div class="col-6 p-0" [ngClass]="field?.type === 'select' ? 'custom-group' : ''">
+                            <nz-color-picker *ngIf="field?.type === 'color-picker'" nzShowText class="w-100" nz-tooltip
+                              [nzTooltipTitle]="field?.tooltip" [formControlName]="field.key"
+                              (nzOnChange)="onPropertyValueChange($event, field.key)">
+                            </nz-color-picker>
+
+                            <input *ngIf="field?.type === 'number'" nz-input [placeholder]="field?.placeholder"
+                              nz-tooltip [nzTooltipTitle]="field?.tooltip" [formControlName]="field?.key" type="number"
+                              (keyup)="onPropertyValueChange($event, field.key)" />
+
+                            <nz-select *ngIf="field?.type === 'select'" [formControlName]="field?.key" nz-tooltip
+                              [nzTooltipTitle]="field?.tooltip" [nzPlaceHolder]="field?.placeholder" class="w-100"
+                              (ngModelChange)="onPropertyValueChange($event, field.key)">
+                              <nz-option *ngFor="let option of field?.options" [nzValue]="option.value"
+                                [nzLabel]="option.key"></nz-option>
+                            </nz-select>
+                          </div>
+                        </nz-form-item>
+                      </div>
+                    </div>
+                  </nz-collapse-panel>
+                </nz-collapse>
+
+              </form>
+            </div>
+          </div>
+        </nz-tab>
+      </nz-tabset>
+    </div>
+    <div class="collapse-btn-container">
+      <img src="assets/images/icons/collapse.svg" type="" (click)="toggleCollapseConfig()">
+    </div>
+  </div>
+
+  <div class="cols-1" *ngIf="isCollapsedConfig" [ngClass]="!isCollapsedData && isCollapsedConfig ? 'pe-0' : 'pe-0'">
+    <div class="inner-canvas-white">
+      <div class="vert-text">
+        <p class="orientation">Configurations</p>
+      </div>
+    </div>
+    <div class="collapse-btn-container-vert" *ngIf="isCollapsedConfig"
+      [ngStyle]="{ right: !isCollapsedData && isCollapsedConfig ? '16.5%' : '5.75%' }">
+      <img src="assets/images/icons/expand.svg" type="" (click)="toggleCollapseConfig()">
+    </div>
+  </div>
+
+
+
+  <div class="col-2 h-100" *ngIf="!isCollapsedData" [ngClass]="!isCollapsedData && !isCollapsedConfig ? 'pe-0' : 'pe-0'"
+    style="position:relative">
+    <div class="inner-canvas-white">
+      <nz-tabset>
+        <nz-tab nzTitle="Headers">
+          <div class="row h-100">
+            <div class="col-12">
+              <nz-form-item>
+                <nz-form-control>
+                  <input nz-input placeholder="Search" [(ngModel)]="search" (keyup)="searchHeaders()" type="text" />
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <div class="col-12 h-100">
+              <div cdkDropList #todoList="cdkDropList" [cdkDropListData]="tableDataColumns" class="example-list"
+                (cdkDropListDropped)="drop($event)">
+                <div class="data-field-container">
+                  <ul class="no-bullets">
+                    <li *ngFor="let header of filteredHeaders">
+                      <div class="example-box" cdkDrag>
+                        <label nz-checkbox [(ngModel)]="header['checked']" (ngModelChange)="onCheckedChange()"></label>
+                        <span nz-tooltip [nzTooltipTitle]="header.name" *ngIf="header.name.length > 15">
+                          {{ header.name | truncate : 15 }}
+                        </span>
+                        <span *ngIf="header.name.length <= 15">
+                          {{ header.name }}
+                        </span>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nz-tab>
+        <nz-tab nzTitle="Data">
+          <div class="row h-100">
+            <div class="col-12 h-100">
+              <div class="data-field-container">
+                <ul class="no-bullets">
+                  <li *ngFor="let item of dataSources;" (click)="selectDataSource(item.name)"
+                    [ngClass]="this.dataSource.toString() === item.name ? 'selectedSource' : ''">
+                    <span
+                      [ngClass]="this.dataSource.toString() === item.name ? 'index-box1' : 'index-box'">{{item.no}}</span>
+                    <span nz-tooltip [nzTooltipTitle]="item.name" *ngIf="item.name.length > 15">
+                      {{ item.name | truncate : 15 }}
+                    </span>
+                    <span *ngIf="item.name.length <= 15">
+                      {{ item.name }}
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </nz-tab>
+      </nz-tabset>
+    </div>
+    <div class="collapse-btn-container">
+      <img src="assets/images/icons/collapse.svg" type="" (click)="toggleCollapseData()">
+    </div>
+  </div>
+
+  <div class="cols-1" *ngIf="isCollapsedData" [ngClass]="isCollapsedData && isCollapsedConfig ? 'pe-0' : 'p-0'">
+    <div class="inner-canvas-white">
+      <div class="vert-text">
+        <p class="orientation">Data Properties</p>
+      </div>
+    </div>
+    <div class="collapse-btn-container-vert" *ngIf="isCollapsedData">
+      <img src="assets/images/icons/expand.svg" alt="Expand Button" (click)="toggleCollapseData()">
+    </div>
+  </div>
+
+</div>
+
+<ng-template #filtersModalTemplate>
+  <app-filters [isVisible]="isVisibleFilterModal" [array]="tableDataColumns" [dataArray]="dataTablefilters"
+    (visibilityChange)="handleModalVisibilityChange($event)">
+  </app-filters>
+</ng-template>
+<ng-container *ngIf="isVisibleFilterModal" [ngTemplateOutlet]="filtersModalTemplate"></ng-container>

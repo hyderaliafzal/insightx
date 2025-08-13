@@ -1,0 +1,30 @@
+<div class="alert">
+  <ngb-alert *ngIf="invalidFileType" type="danger" (close)="invalidFileType = false">
+    Please select a valid CSV file.
+  </ngb-alert>
+</div>
+<div class="modal-overlay" *ngIf="isVisible">
+  <div class="modal-content">
+    <button type="button" class="close-button" (click)="isVisible = false">×</button>
+
+    <form>
+      <div class="mb-3">
+        <label class="form-label">User Name</label>
+        <input type="text" class="form-control">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-control">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">SFTP URL</label>
+        <input type="text" class="form-control">
+      </div>
+      <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+        <label class="form-check-label" for="exampleCheck1">Save this info</label>
+      </div>
+      <button type="submit" class="btn btn-primary">Connect</button>
+    </form>
+  </div>
+</div>

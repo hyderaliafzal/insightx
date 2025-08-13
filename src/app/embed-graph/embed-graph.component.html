@@ -1,0 +1,18 @@
+<div class="page-wrapper m-0">
+    <div class="row h-100">
+        <div class="col-12">
+            <div class="inner-canvas-white">
+                <div class="dashboard-canvas canvas-dots">
+                    <div class="resizable-draggable" *ngFor="let chart of chartRenders; index as i; trackBy: trackByFn"
+                        [style.transform]="'translate(' + chart.x + 'px, ' + chart.y + 'px)'"
+                        [style.width]="chart.width + 'px'" [style.height]="chart.height + 'px'" [attr.data-x]="chart.x"
+                        [attr.data-y]="chart.y">
+                        <input type="hidden" value="{{chart.uid}}">
+                        <dashboard-chart [type]="chart.type" [data]="chart.data" [options]="chart.options">
+                        </dashboard-chart>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

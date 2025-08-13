@@ -1,0 +1,59 @@
+.card-container {
+    position: relative;
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+
+.card {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border: 2px solid rgba(189, 189, 189, 0.5);
+    border-radius: 5px;
+    box-shadow: 0 0 5px 2px rgba(189, 189, 189, 0.5);
+    margin-left: 15px;
+}
+
+.card:hover {
+    border-color: rgba(131, 85, 161, 0.7);
+}
+
+.graph {
+    position: relative;
+    width: 100%;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chart-icon {
+    width: 50%;
+    height: 50%;
+    margin-top: 15px;
+}
+
+.action-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.edit-btn,
+.delete-btn {
+    width: 30px;
+    cursor: pointer;
+}
+
+.edit-btn:hover,
+.delete-btn:hover {
+    transform: scale(1.2);
+}
+
+.title {
+    font-style: normal;
+    font-size: 0.75rem;
+    text-align: center;
+}

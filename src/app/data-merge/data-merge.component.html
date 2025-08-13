@@ -1,0 +1,204 @@
+<div class="row h-100 w-100">
+    <div class="col-12 p-0">
+        <div class="inner-canvas-white">
+            <div class="page-wrapper pt-4" style="padding-left: 20px;">
+                <nz-card nzTitle="Data Merge" [nzExtra]="modalTitleTemplate">
+                    <ng-template #modalTitleTemplate>
+                        <div class="w-100">
+                            <button nz-button nzType="primary" (click)="addRow()"
+                                class="d-flex justify-content-center align-items-center">
+                                <span class="plus-symbol" nz-icon nzType="plus"></span>
+                            </button>
+                        </div>
+                    </ng-template>
+                    <form [formGroup]="form">
+                        <div class="row">
+                            <div class="col-6">
+                                <nz-form-item>
+                                    <nz-form-label [nzLabelAlign]="'left'" nzRequired>
+                                        Name
+                                    </nz-form-label>
+                                    <nz-form-control>
+                                        <input nz-input placeholder="Enter Name" formControlName="name" type="text"
+                                            (keypress)="inputName()" />
+                                        <ng-container *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
+                                            <label class="text-danger"
+                                                *ngIf="form.get('name')?.hasError('required')">This field is
+                                                required.</label>
+                                            <label class="text-danger"
+                                                *ngIf="form.get('name')?.hasError('pattern')">Spaces are not
+                                                allowed.</label>
+                                            <label class="text-danger"
+                                                *ngIf="form.get('name')?.hasError('invalidName')">
+                                                Name must either start with "vu_" or have more than 3 characters.
+                                            </label>
+                                        </ng-container>
+                                    </nz-form-control>
+                                </nz-form-item>
+                            </div>
+                        </div>
+                        <div formArrayName="mergeQueryDetails">
+                            <div *ngFor="let group of mergeQueryDetails.controls; let i = index" [formGroupName]="i">
+                                <div class="row mb-3 position-relative" [ngClass]="i > 0 ? 'record' : 'first-record'">
+                                    <span *ngIf="i > 0" nz-icon nzType="close" nzTheme="outline" class="close-icon"
+                                        (click)="removeRow(i)">
+                                    </span>
+                                    <div class="col-2 p-0" *ngIf="i === 0">
+                                        <nz-form-item>
+                                            <nz-form-control>
+                                                <nz-select formControlName="leftTable" nzPlaceHolder="Table 1"
+                                                    nzShowSearch
+                                                    (ngModelChange)="getColumns($event, 'leftTable', i, 'select')">
+                                                    <nz-option *ngFor="let dataSource of dataSources['leftTable' + i]"
+                                                        [nzValue]="dataSource.name" [nzLabel]="dataSource.name">
+                                                    </nz-option>
+                                                </nz-select>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                        <ng-container
+                                            *ngIf="group.get('leftTable')?.invalid && group.get('leftTable')?.touched">
+                                            <label class="text-danger">This field is required.</label>
+                                        </ng-container>
+                                    </div>
+                                    <div class="col-2 p-0 text-center" *ngIf="i > 0">
+                                        <nz-form-item>
+                                            <nz-form-control>
+                                                <label
+                                                    *ngIf="mergeQueryDetails.at(i).get('leftTable')?.value?.length > 20"
+                                                    nz-tooltip
+                                                    [nzTooltipTitle]="mergeQueryDetails.at(i).get('leftTable')?.value">
+                                                    {{ mergeQueryDetails.at(i).get('leftTable')?.value | truncate : 20
+                                                    }}
+                                                </label>
+                                                <label
+                                                    *ngIf="mergeQueryDetails.at(i).get('leftTable')?.value?.length <= 20">
+                                                    {{ mergeQueryDetails.at(i).get('leftTable')?.value }}
+                                                </label>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+
+                                    <div class="col-1 text-center">
+                                        <nz-form-item>
+                                            <nz-form-control>
+                                                <button nz-button nz-dropdown [nzDropdownMenu]="joinMenu"
+                                                    class="selectDropdown">
+                                                    <img [src]="mergeQueryDetails.at(i).get('joinImg')?.value || 'assets/images/icons/left-outer.svg'"
+                                                        [alt]="mergeQueryDetails.at(i).get('joinType')?.value"
+                                                        [style.width.rem]="2">
+                                                </button>
+                                                <nz-dropdown-menu #joinMenu="nzDropdownMenu">
+                                                    <ul nz-menu>
+                                                        <li nz-menu-item (click)="selectJoin(join, i)"
+                                                            *ngFor="let join of joins">
+                                                            <img [src]="join.img" [alt]="join.img"
+                                                                [style.width.rem]="2"> {{ join.key }}
+                                                        </li>
+                                                    </ul>
+                                                </nz-dropdown-menu>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+
+                                    <div class="col-2 p-0">
+                                        <nz-form-item>
+                                            <nz-form-control>
+                                                <nz-select formControlName="rightTable" nzPlaceHolder="Table 2"
+                                                    nzShowSearch
+                                                    (ngModelChange)="getColumns($event, 'rightTable', i, 'select')">
+                                                    <nz-option *ngFor="let dataSource of dataSources['rightTable']"
+                                                        [nzValue]="dataSource.name"
+                                                        [nzLabel]="dataSource.name"></nz-option>
+                                                </nz-select>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                        <ng-container
+                                            *ngIf="group.get('rightTable')?.invalid && group.get('rightTable')?.touched">
+                                            <label class="text-danger">This field is required.</label>
+                                        </ng-container>
+                                    </div>
+
+                                    <div class="col-1 text-center">
+                                        <nz-form-item>
+                                            <nz-form-control>
+                                                <label>where</label>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+
+                                    <div class="col-2 p-0">
+                                        <nz-form-item>
+                                            <nz-form-control>
+                                                <nz-select formControlName="primaryColumn"
+                                                    nzPlaceHolder="Primary Column" nzShowSearch>
+                                                    <ng-container *ngFor="let item of columns['columnsLeft' + i]">
+                                                        <nz-option [nzValue]="item.name" [nzLabel]="item.name"
+                                                            nzCustomContent>
+                                                            {{ item.name }}
+                                                            <span class="index-box" style="float: right;"
+                                                                *ngIf="item.pk">{{'PK'}}</span>
+                                                        </nz-option>
+                                                    </ng-container>
+                                                </nz-select>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                        <ng-container
+                                            *ngIf="group.get('primaryColumn')?.invalid && group.get('primaryColumn')?.touched">
+                                            <label class="text-danger">This field is required.</label>
+                                        </ng-container>
+                                    </div>
+
+                                    <div class="col-1 text-center">
+                                        <nz-form-item>
+                                            <nz-form-control>
+                                                <button nz-button nz-dropdown [nzDropdownMenu]="operatorMenu"
+                                                    class="selectDropdown">
+                                                    {{ mergeQueryDetails.at(i).get('operator')?.value || '=' }}
+                                                </button>
+                                                <nz-dropdown-menu #operatorMenu="nzDropdownMenu">
+                                                    <ul nz-menu>
+                                                        <li nz-menu-item (click)="selectOperator(operator.value, i)"
+                                                            *ngFor="let operator of operators">
+                                                            {{ operator.key }}
+                                                        </li>
+                                                    </ul>
+                                                </nz-dropdown-menu>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+
+                                    <div class="col-2 p-0">
+                                        <nz-form-item>
+                                            <nz-form-control>
+                                                <nz-select formControlName="foreignColumn"
+                                                    nzPlaceHolder="Foreign Column" nzShowSearch>
+                                                    <ng-container *ngFor="let item of columns['columnsRight' + i]">
+                                                        <nz-option [nzValue]="item.name" [nzLabel]="item.name"
+                                                            nzCustomContent>
+                                                            {{ item.name }}
+                                                            <span class="index-box" style="float: right;"
+                                                                *ngIf="item.fk">{{'FK'}}</span>
+                                                        </nz-option>
+                                                    </ng-container>
+                                                </nz-select>
+                                            </nz-form-control>
+                                        </nz-form-item>
+
+                                        <ng-container
+                                            *ngIf="group.get('foreignColumn')?.invalid && group.get('foreignColumn')?.touched">
+                                            <label class="text-danger">This field is required.</label>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                                <div class="h-5 d-flex justify-content-end saveRow">
+                                    <button nz-button nzType="primary" class="save-button"
+                                        (click)="saveDataMerge()">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </nz-card>
+            </div>
+        </div>
+    </div>
+</div>

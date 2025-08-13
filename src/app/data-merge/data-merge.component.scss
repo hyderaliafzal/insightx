@@ -1,0 +1,60 @@
+.ant-card {
+    border-radius: 10px !important;
+}
+
+.ant-btn {
+    border-radius: 5px;
+}
+
+.first-record {
+    background-color: #F9F4FD;
+    padding: 20px 20px;
+    border-radius: 10px;
+}
+
+.record {
+    background-color: #FBF8FE;
+    padding: 20px 20px;
+    border-radius: 10px;
+}
+
+.ant-form-item {
+    padding: 0 0px;
+    margin: 12px 0px;
+}
+
+.selectDropdown {
+    background-color: white;
+    border: 0px;
+    box-shadow: none;
+}
+
+.saveRow {
+    position: fixed;
+    bottom: 3vh;
+    right: 4vh;
+}
+
+.save-button {
+    background-color: #8255a1;
+    width: 80px;
+}
+
+.close-icon {
+    position: absolute;
+    top: 20%;
+    left: 97%;
+    transform: translateY(-50%);
+    color: #575353;
+    cursor: pointer;
+}
+
+.index-box {
+    display: inline-block;
+    background-color: #f8f0ff;
+    padding: 5px;
+    border-radius: 5px;
+    text-align: center;
+    width: 30px;
+    font-weight: 300;
+}

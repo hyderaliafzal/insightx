@@ -1,0 +1,136 @@
+// Sidebar
+$sidebar-link-padding: 13px 15px;
+$sidebar-icon-size: 16px;
+$sidebar-first-level-padding: 0 0 10px 0;
+$sidebar-first-level-link-padding: 10px 15px;
+$sidebar-first-level-icon-size: 14px;
+
+/*******************
+Main sidebar
+******************/
+
+.left-sidebar {
+  width: 100%;
+  height: calc(100% - 64px);
+  // overflow-x: hidden;
+  // overflow-y: auto;
+  z-index: 99;
+  border-radius: 5px;
+  background: $sidebar;
+  box-shadow: $shadow;
+  transition: 0.2s ease-in;
+}
+// .sidebar-submenu-nav {
+//   max-height: 400px;
+//   overflow-x: hidden;
+//   overflow-y: auto;
+// }
+
+.collapse-btn-container-sidebar {
+  position: absolute; /* Place it relative to the sidebar container */
+  bottom: 13%; /* Push it to the bottom */
+  // left: 50%; /* Center it horizontally */
+  transform: translateX(-50%); /* Offset it back by half its width for perfect centering */
+  display: flex; /* Flexbox for centering the icon */
+  justify-content: center;
+  align-items: center;
+  width: 100%; /* Optional: Set width based on sidebar width */
+}
+
+.collapse-btn-container-sidebar img {
+  width: 2%;
+  height: 2%;
+  margin: auto;
+  cursor: pointer; /* Add a pointer cursor for better UX */
+  transition: transform 0.2s ease-in-out; /* Smooth scaling effect */
+}
+
+.collapse-btn-container-sidebar img:hover {
+  transform: scale(1.2); /* Enlarges the icon slightly on hover */
+}
+
+
+/*******************
+sidebar navigation
+******************/
+
+.sidebar-nav {
+  ul {
+    .sidebar-item {
+      width: 100%;
+      .sidebar-link {
+        color: $sidebar-text;
+        padding: $sidebar-link-padding;
+        display: flex;
+        white-space: nowrap;
+        align-items: center;
+        gap: 14px;
+        font-size: 13px;
+        i {
+          font-style: normal;
+          font-size: $sidebar-icon-size;
+          color: $sidebar-icons;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        &.active,
+        &:hover {
+          opacity: 1;
+        }
+      }
+      &.active > .sidebar-link {
+        background: $active-sidebar-menu;
+        opacity: 1;
+        color: $white;
+        border-radius: 4px;
+      }
+      .first-level{
+        .sidebar-submenu-item {
+          width: 100%;
+          .sidebar-submenu-link {
+            color: $sidebar-text;
+            padding: $sidebar-link-padding;
+            display: flex;
+            white-space: nowrap;
+            align-items: center;
+            gap: 14px;
+            font-size: 13px;
+            i {
+              font-style: normal;
+              font-size: $sidebar-icon-size;
+              color: $sidebar-icons;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+            &.active > .sidebar-link {
+              background: $active-sidebar-menu;
+              opacity: 1;
+              color: $white;
+              border-radius: 4px;
+            }
+          }
+
+        }
+
+      }
+    }
+  }
+}
+
+/*******************
+ common m-p removed
+******************/
+.sidebar-nav {
+  ul {
+    margin: 0px;
+    padding: 0px;
+    li {
+      list-style: none;
+    }
+  }
+}
+.collapse.in {
+  display: block;
+}

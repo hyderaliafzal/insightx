@@ -1,0 +1,80 @@
+<nz-modal [(nzVisible)]="isVisible" nzTitle="Filters" nzCentered nzWidth="50%"
+  (nzOnCancel)="closeDeleteConfirmationModal()">
+  <div *nzModalContent>
+    <form [formGroup]="form">
+      <div class="row">
+        <div class="col-3">
+          <nz-form-item class="p-0">
+            <nz-form-control>
+              <nz-select formControlName="name" nzPlaceHolder="Name" nzShowSearch>
+                <nz-option *ngFor="let item of array" [nzValue]="item.name" [nzLabel]="item.name">
+                </nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+          <ng-container *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
+            <label class="text-danger">This field is required.</label>
+          </ng-container>
+        </div>
+        <div class="col-3">
+          <nz-form-item class="p-0">
+            <nz-form-control>
+              <nz-select formControlName="operation" nzPlaceHolder="Operations" nzShowSearch>
+                <nz-option *ngFor="let item of operators" [nzValue]="item.value" [nzLabel]="item.key">
+                </nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+          <ng-container *ngIf="form.get('operation')?.invalid && form.get('operation')?.touched">
+            <label class="text-danger">This field is required.</label>
+          </ng-container>
+        </div>
+        <div class="col-3">
+          <nz-form-item class="p-0">
+            <nz-form-control>
+              <input formControlName="keyword" nz-input placeholder="Type your text" type="text" />
+            </nz-form-control>
+          </nz-form-item>
+          <ng-container *ngIf="form.get('keyword')?.invalid && form.get('keyword')?.touched">
+            <label class="text-danger">This field is required.</label>
+          </ng-container>
+        </div>
+        <div class="col-3 d-flex justify-content-center">
+          <button nz-button nzType="primary" (click)="onAddButtonClick(form.value)"
+            class="d-flex justify-content-between align-items-center">
+            <span nz-icon nzType="plus"></span> Add
+          </button>
+        </div>
+        <div class="col-12">
+          <nz-table #listTable [nzData]="dataTablefilters" class="p-b-5" [nzBordered]="true" [nzFrontPagination]="false"
+            [nzLoading]="loading">
+            <thead>
+              <tr>
+                <th nzWidth="30%">Column</th>
+                <th nzWidth="30%">Operation</th>
+                <th nzWidth="30%">Keyword</th>
+                <th nzWidth="10%" class="text-end"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of listTable.data">
+                <td>{{ data?.name }}</td>
+                <td>{{ data?.operationKey }}</td>
+                <td>{{ data?.keyword }}</td>
+                <td class="text-end">
+                  <span nz-icon nzType="delete" nzTheme="outline" (click)="removeItem(data)"
+                    class="deleteButton"></span>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div *nzModalFooter class="d-flex justify-content-end">
+    <button nz-button nzType="primary" (click)="handleSave()">
+      Apply
+    </button>
+  </div>
+</nz-modal>

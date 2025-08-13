@@ -1,0 +1,21 @@
+.body-content {
+  display: flex;
+  background-color: #E7E7E7;
+  height: 100%;
+}
+
+.scroll-bar {
+  height: calc(100% - 64px);
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.cols-11 {
+  flex: 0 0 auto;
+  width: 95%;
+}
+
+.cols-1 {
+  flex: 0 0 auto;
+  width: 5%;
+}
